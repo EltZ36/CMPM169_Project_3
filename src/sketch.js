@@ -4,7 +4,7 @@ let img;
 let txt; 
 let slogans;
 let asciiFlag, pixelFlag, asciiNoise
-let fillFull, fillGrey, fillStevia, fillWhite
+let fillFull, fillGrey, fillStevia, fillWhite, fillInvert, fillRandom
 
 function preload() {
     slogans = loadStrings('txt/slogans.txt')
@@ -37,6 +37,7 @@ function draw(){
     background(0);
     //ascii conversion code from the coding train link: https://www.youtube.com/watch?v=55iwMYv8tGI 
     if(img){
+        edgeImg = img
         img.resize(64, 64)
         let w = width / img.width;
         let h = height/ img.height;
@@ -80,6 +81,9 @@ function draw(){
                 if(fillWhite){
                     fill(255)
                 }
+                if(fillInvert){
+                    fill(255 - r, 255 - g, 255 - b)
+                }
                 if(asciiFlag && pixelFlag != true && asciiNoise != true ){
                     const len = density.length;
                     const charIndex = floor(map(avg, 0, 255, len, 0))
@@ -120,28 +124,44 @@ function keyPressed(){
         pixelFlag = false 
         asciiNoise = true 
     }
-    if(key == "b"){
+    if(key == "f"){
+        fillInvert = false
         fillFull = true  
         fillGrey = false
         fillStevia = false 
         fillWhite = false 
     }
     if(key == "g"){
+        fillInvert = false 
         fillFull = false 
         fillGrey = true 
         fillStevia = false 
         fillWhite = false 
     }
     if(key == "s"){
+        fillInvert = false  
         fillFull = false 
         fillGrey = false
         fillStevia = true
         fillWhite = false 
     }
     if(key == "w"){
+        fillInvert = false 
         fillFull = false  
         fillGrey = false
         fillStevia = false 
         fillWhite = true 
     }
+    if(key == "i"){
+        fillInvert = true 
+        fillFull = false  
+        fillGrey = false
+        fillStevia = false 
+        fillWhite = false 
+    }
+}
+
+//from the p5 example 
+function edgeDetect(img){
+
 }

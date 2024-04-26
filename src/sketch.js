@@ -41,6 +41,10 @@ function draw(){
         let w = width / img.width;
         let h = height/ img.height;
         img.loadPixels(); 
+        let r = 0
+        let g = 0
+        let b = 0
+        let avg = 0
         for(let i = 0; i < img.width; i++){
             for(let j = 0; j < img.height; j++){
                 const pixelIndex = (i + j * img.width) * 4;
@@ -74,15 +78,20 @@ function draw(){
                         break;
                     }
                 }
-                const len = density.length;
-                const charIndex = floor(map(avg, 0, 255, len, 0))
-                //square(i * w, j * h, w)   
-                //textSize(30)
-                //asked gpt to give me a list of slogans 
-                let chooseLine = random(slogans)
-                //textAlign(CENTER, CENTER)
-                //text(chooseLine, i * w, j * h)
-                text(density.charAt(charIndex), i * w, j * h);
+                if(asciiFlag){
+                    const len = density.length;
+                    const charIndex = floor(map(avg, 0, 255, len, 0))
+                    text(density.charAt(charIndex), i * w, j * h);
+                }
+                if(pixelFlag){
+                    square(i * w, j * h, w)   
+                }
+                if(asciiNoise){
+                    //asked gpt to give me a list of slogans 
+                    let chooseLine = random(slogans)
+                    //textAlign(CENTER, CENTER)
+                    text(chooseLine, i * w, j * h)
+                }
             }
         }
     }
@@ -93,6 +102,20 @@ function goSave(){
     saveCanvas('image_filter', 'jpg')
 }
 
-function imageFilter(){
-
+function keyPressed(){
+    if(key == "a"){
+        asciiFlag = true 
+        pixelFlag = false 
+        asciiNoise = false 
+    }
+    if(key == "p"){
+        pixelFlag = true 
+        asciiFlag = false 
+        asciiNoise = false 
+    }
+    if(key == 'n'){
+        asciiFlag = false 
+        pixelFlag = false 
+        asciiNoise = true 
+    }
 }

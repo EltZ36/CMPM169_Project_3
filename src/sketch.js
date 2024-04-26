@@ -45,12 +45,19 @@ function draw(){
         let g = 0
         let b = 0
         let avg = 0
+        let asciiFlag = true
         for(let i = 0; i < img.width; i++){
             for(let j = 0; j < img.height; j++){
                 const pixelIndex = (i + j * img.width) * 4;
                 const r = img.pixels[pixelIndex + 0]
                 const g = img.pixels[pixelIndex + 1]
                 const b = img.pixels[pixelIndex + 2]
+                var tr = r *.393 + g *.769 + b *.189;
+                var tg = r *.349 + g *.686 + b *.168;
+                var tb = r *.272 + g *.534 + b *.131;
+                img.pixels[pixelIndex+0] = tr;
+                img.pixels[pixelIndex+1] = tg;
+                img.pixels[pixelIndex+2] = tb;
                 const avg = (r + g + b) / 3
                 //the third index is transparency
                 noStroke();
@@ -58,7 +65,8 @@ function draw(){
                 //noise 
                 //add in the filters: 
                 //full color = c
-                fill(255)
+                //fill(tr, tg, tb)
+                fill(avg)
                 if(keyIsPressed == true){
                     switch(keyCode){
                     //full color (b)
@@ -69,16 +77,20 @@ function draw(){
                     case 71:
                         fill(avg)
                         break 
+                    //https://idmnyu.github.io/p5.js-image/Filters/index.html#sepia
+                    //sepia (s)
+                    case 83: 
+                        fill(tr, tg, tb)
+                        break
                     //white (w)
                     case 87:
                         fill(255)
                         break  
                     default:
-                        fill(255)
-                        break;
+                        break
                     }
                 }
-                if(asciiFlag){
+                if(asciiFlag && pixelFlag != true && asciiNoise != true ){
                     const len = density.length;
                     const charIndex = floor(map(avg, 0, 255, len, 0))
                     text(density.charAt(charIndex), i * w, j * h);

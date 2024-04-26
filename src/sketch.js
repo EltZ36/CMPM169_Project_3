@@ -1,9 +1,9 @@
 
 const density = 'Ñ@#W$9876543210?!abc;:+=-,._ ';
 let img;
-let txt; 
+let txt;
 let slogans;
-let asciiFlag, pixelFlag, asciiNoise, gridFlag 
+let asciiFlag, pixelFlag, asciiNoise, gridFlag
 let fillFull, fillGrey, fillStevia, fillWhite, fillInvert, fillRandom
 
 function preload() {
@@ -12,7 +12,7 @@ function preload() {
 
 //add in user input
 //file input from gpt and asking how to make an image take input 
-function setup(){
+function setup() {
     createCanvas(600, 600)
     fileInput = createFileInput(handleFile);
     fileInput.position(20, 620);
@@ -25,41 +25,41 @@ function setup(){
 function handleFile(file) {
     // Load the image file
     if (file.type === 'image') {
-      loadImage(file.data, (loadedImg) => {
-        img = loadedImg;
-      });
+        loadImage(file.data, (loadedImg) => {
+            img = loadedImg;
+        });
     } else {
-      alert('Please upload an image file.');
+        alert('Please upload an image file.');
     }
 }
 
-function draw(){
+function draw() {
     background(0);
     //ascii conversion code from the coding train link: https://www.youtube.com/watch?v=55iwMYv8tGI 
-    if(img){
+    if (img) {
         edgeImg = img
         img.resize(64, 64)
         let w = width / img.width;
-        let h = height/ img.height;
-        img.loadPixels(); 
+        let h = height / img.height;
+        img.loadPixels();
         let r = 0
         let g = 0
         let b = 0
         let avg = 0
         let asciiFlag = true
-        for(let i = 0; i < img.width; i++){
-            for(let j = 0; j < img.height; j++){
+        for (let i = 0; i < img.width; i++) {
+            for (let j = 0; j < img.height; j++) {
                 const pixelIndex = (i + j * img.width) * 4;
                 const r = img.pixels[pixelIndex + 0]
                 const g = img.pixels[pixelIndex + 1]
                 const b = img.pixels[pixelIndex + 2]
                 //https://idmnyu.github.io/p5.js-image/Filters/index.html#sepia
-                var tr = r *.393 + g *.769 + b *.189;
-                var tg = r *.349 + g *.686 + b *.168;
-                var tb = r *.272 + g *.534 + b *.131;
-                img.pixels[pixelIndex+0] = tr;
-                img.pixels[pixelIndex+1] = tg;
-                img.pixels[pixelIndex+2] = tb;
+                var tr = r * .393 + g * .769 + b * .189;
+                var tg = r * .349 + g * .686 + b * .168;
+                var tb = r * .272 + g * .534 + b * .131;
+                img.pixels[pixelIndex + 0] = tr;
+                img.pixels[pixelIndex + 1] = tg;
+                img.pixels[pixelIndex + 2] = tb;
                 const avg = (r + g + b) / 3
                 //the third index is transparency
                 noStroke();
@@ -69,36 +69,36 @@ function draw(){
                 //full color = c
                 //fill(tr, tg, tb)
                 fill(avg)
-                if(fillFull){
+                if (fillFull) {
                     fill(r, g, b)
                 }
-                if(fillGrey){
+                if (fillGrey) {
                     fill(avg)
                 }
-                if(fillStevia){
+                if (fillStevia) {
                     fill(tr, tg, tb)
                 }
-                if(fillWhite){
+                if (fillWhite) {
                     fill(255)
                 }
-                if(fillInvert){
+                if (fillInvert) {
                     fill(255 - r, 255 - g, 255 - b)
                 }
-                if(asciiFlag && pixelFlag != true && asciiNoise != true && gridFlag != true){
+                if (asciiFlag && pixelFlag != true && asciiNoise != true && gridFlag != true) {
                     const len = density.length;
                     const charIndex = floor(map(avg, 0, 255, len, 0))
                     text(density.charAt(charIndex), i * w, j * h);
                 }
-                if(pixelFlag){
-                    square(i * w, j * h, w)   
+                if (pixelFlag) {
+                    square(i * w, j * h, w)
                 }
-                if(gridFlag){
-                    if(j % 3 == 0 || i % 2 == 1){
+                if (gridFlag) {
+                    if (j % 3 == 0 || i % 2 == 1) {
                         fill(0);
                     }
-                    square(i * w, j *h, w)
+                    square(i * w, j * h, w)
                 }
-                if(asciiNoise){
+                if (asciiNoise) {
                     //asked gpt to give me a list of slogans 
                     let chooseLine = random(slogans)
                     text(chooseLine, i * w, j * h)
@@ -106,71 +106,71 @@ function draw(){
             }
         }
     }
-    }
+}
 //}
 
-function goSave(){
+function goSave() {
     saveCanvas('image_filter', 'jpg')
 }
 
-function keyPressed(){
-    if(key == "a"){
-        asciiFlag = true 
-        pixelFlag = false 
-        asciiNoise = false 
+function keyPressed() {
+    if (key == "a") {
+        asciiFlag = true
+        pixelFlag = false
+        asciiNoise = false
         gridFlag = false
     }
-    if(key == "p"){
-        pixelFlag = true 
-        asciiFlag = false 
-        asciiNoise = false 
+    if (key == "p") {
+        pixelFlag = true
+        asciiFlag = false
+        asciiNoise = false
         gridFlag = false
     }
-    if(key == 'n'){
-        asciiFlag = false 
-        pixelFlag = false 
-        asciiNoise = true 
-        gridFlag = false  
+    if (key == 'n') {
+        asciiFlag = false
+        pixelFlag = false
+        asciiNoise = true
+        gridFlag = false
     }
-    if(key == "c"){
-        asciiFlag = false 
-        pixelFlag = false 
-        asciiNoise = false 
-        gridFlag = true 
+    if (key == "c") {
+        asciiFlag = false
+        pixelFlag = false
+        asciiNoise = false
+        gridFlag = true
     }
-    if(key == "f"){
+    if (key == "f") {
         fillInvert = false
-        fillFull = true  
+        fillFull = true
         fillGrey = false
-        fillStevia = false 
-        fillWhite = false 
+        fillStevia = false
+        fillWhite = false
     }
-    if(key == "g"){
-        fillInvert = false 
-        fillFull = false 
-        fillGrey = true 
-        fillStevia = false 
-        fillWhite = false 
+    if (key == "g") {
+        fillInvert = false
+        fillFull = false
+        fillGrey = true
+        fillStevia = false
+        fillWhite = false
     }
-    if(key == "s"){
-        fillInvert = false  
-        fillFull = false 
+    if (key == "s") {
+        fillInvert = false
+        fillFull = false
         fillGrey = false
         fillStevia = true
-        fillWhite = false 
+        fillWhite = false
     }
-    if(key == "w"){
-        fillInvert = false 
-        fillFull = false  
+    if (key == "w") {
+        fillInvert = false
+        fillFull = false
         fillGrey = false
-        fillStevia = false 
-        fillWhite = true 
+        fillStevia = false
+        fillWhite = true
     }
-    if(key == "i"){
-        fillInvert = true 
-        fillFull = false  
+    if (key == "i") {
+        fillInvert = true
+        fillFull = false
         fillGrey = false
-        fillStevia = false 
-        fillWhite = false 
+        fillStevia = false
+        fillWhite = false
     }
 }

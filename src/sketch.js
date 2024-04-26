@@ -1,9 +1,9 @@
-//ascii based on video from Daniel Shiffman/thecoding train 
+
 const density = 'Ñ@#W$9876543210?!abc;:+=-,._ ';
 let img;
 let txt; 
 let slogans;
-let asciiFlag, pixelFlag, asciiNoise
+let asciiFlag, pixelFlag, asciiNoise, gridFlag 
 let fillFull, fillGrey, fillStevia, fillWhite, fillInvert, fillRandom
 
 function preload() {
@@ -84,7 +84,7 @@ function draw(){
                 if(fillInvert){
                     fill(255 - r, 255 - g, 255 - b)
                 }
-                if(asciiFlag && pixelFlag != true && asciiNoise != true ){
+                if(asciiFlag && pixelFlag != true && asciiNoise != true && gridFlag != true){
                     const len = density.length;
                     const charIndex = floor(map(avg, 0, 255, len, 0))
                     text(density.charAt(charIndex), i * w, j * h);
@@ -92,10 +92,15 @@ function draw(){
                 if(pixelFlag){
                     square(i * w, j * h, w)   
                 }
+                if(gridFlag){
+                    if(j % 3 == 0 || i % 2 == 1){
+                        fill(0);
+                    }
+                    square(i * w, j *h, w)
+                }
                 if(asciiNoise){
                     //asked gpt to give me a list of slogans 
                     let chooseLine = random(slogans)
-                    //textAlign(CENTER, CENTER)
                     text(chooseLine, i * w, j * h)
                 }
             }
@@ -113,16 +118,25 @@ function keyPressed(){
         asciiFlag = true 
         pixelFlag = false 
         asciiNoise = false 
+        gridFlag = false
     }
     if(key == "p"){
         pixelFlag = true 
         asciiFlag = false 
         asciiNoise = false 
+        gridFlag = false
     }
     if(key == 'n'){
         asciiFlag = false 
         pixelFlag = false 
         asciiNoise = true 
+        gridFlag = false  
+    }
+    if(key == "c"){
+        asciiFlag = false 
+        pixelFlag = false 
+        asciiNoise = false 
+        gridFlag = true 
     }
     if(key == "f"){
         fillInvert = false
@@ -159,9 +173,4 @@ function keyPressed(){
         fillStevia = false 
         fillWhite = false 
     }
-}
-
-//from the p5 example 
-function edgeDetect(img){
-
 }

@@ -4,6 +4,7 @@ let img;
 let txt; 
 let slogans;
 let asciiFlag, pixelFlag, asciiNoise
+let fillFull, fillGrey, fillStevia, fillWhite
 
 function preload() {
     slogans = loadStrings('txt/slogans.txt')
@@ -36,8 +37,7 @@ function draw(){
     background(0);
     //ascii conversion code from the coding train link: https://www.youtube.com/watch?v=55iwMYv8tGI 
     if(img){
-        //image(img, 0, 0, width, height)
-        img.resize(64, 64);
+        img.resize(64, 64)
         let w = width / img.width;
         let h = height/ img.height;
         img.loadPixels(); 
@@ -52,6 +52,7 @@ function draw(){
                 const r = img.pixels[pixelIndex + 0]
                 const g = img.pixels[pixelIndex + 1]
                 const b = img.pixels[pixelIndex + 2]
+                //https://idmnyu.github.io/p5.js-image/Filters/index.html#sepia
                 var tr = r *.393 + g *.769 + b *.189;
                 var tg = r *.349 + g *.686 + b *.168;
                 var tb = r *.272 + g *.534 + b *.131;
@@ -67,28 +68,17 @@ function draw(){
                 //full color = c
                 //fill(tr, tg, tb)
                 fill(avg)
-                if(keyIsPressed == true){
-                    switch(keyCode){
-                    //full color (b)
-                    case 66:
-                        fill(r, g, b)
-                        break
-                    //greyscale (g)
-                    case 71:
-                        fill(avg)
-                        break 
-                    //https://idmnyu.github.io/p5.js-image/Filters/index.html#sepia
-                    //sepia (s)
-                    case 83: 
-                        fill(tr, tg, tb)
-                        break
-                    //white (w)
-                    case 87:
-                        fill(255)
-                        break  
-                    default:
-                        break
-                    }
+                if(fillFull){
+                    fill(r, g, b)
+                }
+                if(fillGrey){
+                    fill(avg)
+                }
+                if(fillStevia){
+                    fill(tr, tg, tb)
+                }
+                if(fillWhite){
+                    fill(255)
                 }
                 if(asciiFlag && pixelFlag != true && asciiNoise != true ){
                     const len = density.length;
@@ -129,5 +119,29 @@ function keyPressed(){
         asciiFlag = false 
         pixelFlag = false 
         asciiNoise = true 
+    }
+    if(key == "b"){
+        fillFull = true  
+        fillGrey = false
+        fillStevia = false 
+        fillWhite = false 
+    }
+    if(key == "g"){
+        fillFull = false 
+        fillGrey = true 
+        fillStevia = false 
+        fillWhite = false 
+    }
+    if(key == "s"){
+        fillFull = false 
+        fillGrey = false
+        fillStevia = true
+        fillWhite = false 
+    }
+    if(key == "w"){
+        fillFull = false  
+        fillGrey = false
+        fillStevia = false 
+        fillWhite = true 
     }
 }
